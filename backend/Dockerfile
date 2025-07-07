@@ -10,6 +10,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     FLASK_APP=app.py \
     FLASK_ENV=production
 
+# 更换为中科大apt源，加速依赖安装
+RUN echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm main contrib non-free\n\
+deb https://mirrors.ustc.edu.cn/debian/ bookworm-updates main contrib non-free\n\
+deb https://mirrors.ustc.edu.cn/debian/ bookworm-backports main contrib non-free\n\
+deb https://mirrors.ustc.edu.cn/debian-security/ bookworm-security main contrib non-free" > /etc/apt/sources.list
+
 # 安装系统依赖
 RUN apt-get update && apt-get install -y \
     gcc \
@@ -18,7 +24,10 @@ RUN apt-get update && apt-get install -y \
 
 # 复制requirements.txt并安装Python依赖
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# 配置pip使用国内镜像源
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/ && \
+    pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn && \
+    pip install --no-cache-dir -r requirements.txt
 
 # 复制应用代码
 COPY . .
