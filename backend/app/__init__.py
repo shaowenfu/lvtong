@@ -23,7 +23,7 @@ def create_app():
         r"/*": {
             "origins": "*",
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type", "Authorization"]
+            "allow_headers": ["Content-Type", "Authorization", "X-User-ID"]
         }
     })
     mongo.init_app(app)
