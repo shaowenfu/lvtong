@@ -5,9 +5,14 @@
 - 集成app目录中的模块化架构
 """
 
+from dotenv import load_dotenv
+import os
+
+# 加载环境变量
+load_dotenv()
+
 from flask import jsonify
 from app import create_app
-import os
 
 # 创建Flask应用实例
 app = create_app()
