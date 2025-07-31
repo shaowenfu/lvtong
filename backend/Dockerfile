@@ -7,8 +7,9 @@ WORKDIR /app
 # 设置环境变量
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    FLASK_APP=app.py \
-    FLASK_ENV=production
+    FLASK_APP=run.py \
+    FLASK_ENV=production \
+    PYTHONPATH=/app
 
 # 更换为中科大apt源，加速依赖安装
 RUN echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm main contrib non-free\n\
@@ -47,4 +48,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
 # 使用gunicorn启动应用（生产环境推荐）
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "120", "--log-level", "debug", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "120", "--log-level", "debug", "run:app"]

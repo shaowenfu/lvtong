@@ -33,15 +33,21 @@ services:
         BUILDKIT_INLINE_CACHE: 1
     container_name: flask-api
     restart: unless-stopped
+    env_file:
+      - .env  # 添加这行，从.env文件读取
     environment:
+      # 保留固定的配置
       - FLASK_ENV=production
       - FLASK_HOST=0.0.0.0
       - FLASK_PORT=5000
       - FLASK_DEBUG=false
-      - MONGODB_URI=mongodb://admin:lvtong_admin_0830@mongodb:27017/lvtong?authSource=admin
+      - MONGODB_URI=mongodb://admin:lvtong_admin_2024@mongodb:27017/lvtong?authSource=admin
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_API_BASE=${OPENAI_API_BASE}
       - OPENAI_API_VERSION=${OPENAI_API_VERSION}
+      # 添加 Azure OpenAI 环境变量
+      - AZURE_AI_API_KEY_4O=${AZURE_AI_API_KEY_4O}
+      - AZURE_AI_ENDPOINT_4O=${AZURE_AI_ENDPOINT_4O}
     ports:
       - "127.0.0.1:5000:5000"  # 只绑定到本地，通过nginx代理
     volumes:

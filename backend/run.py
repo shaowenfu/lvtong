@@ -5,9 +5,18 @@
 - 集成app目录中的模块化架构
 """
 
+from dotenv import load_dotenv
+import os
+import sys
+
+# 确保当前目录在Python路径中
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# 加载环境变量
+load_dotenv()
+
 from flask import jsonify
 from app import create_app
-import os
 
 # 创建Flask应用实例
 app = create_app()
