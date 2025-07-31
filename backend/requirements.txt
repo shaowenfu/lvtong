@@ -1,6 +1,23 @@
+# Flask Web框架
 Flask==2.3.3
-Flask-CORS==4.0.0
 Werkzeug==2.3.7
-gunicorn==21.2.0
+
+# 跨域资源共享支持
+Flask-CORS==4.0.0
+
+# MongoDB数据库支持
+Flask-PyMongo==2.3.0
+
+# HTTP请求库（用于调用OpenAI API等）
 requests==2.31.0
+
+# 环境变量加载
 python-dotenv==1.0.0
+
+# 数据处理（如需要可取消注释）
+# pandas==2.0.3
+
+# WSGI服务器
+gunicorn==21.2.0
+
+# TODO: 如需其他依赖，可在此补充

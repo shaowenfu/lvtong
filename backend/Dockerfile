@@ -20,6 +20,8 @@ deb https://mirrors.ustc.edu.cn/debian-security/ bookworm-security main contrib 
 RUN apt-get update && apt-get install -y \
     gcc \
     curl \
+    gnupg \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制requirements.txt并安装Python依赖

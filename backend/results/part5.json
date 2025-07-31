@@ -1,0 +1,67 @@
+[
+    {
+      "timeline": [
+        {"date": "2025-03-12", "updateReason": "首次焦虑情绪基线记录"},
+        {"date": "2025-04-05", "updateReason": "认知重构练习初期反馈"},
+        {"date": "2025-05-20", "updateReason": "惊恐发作频率下降记录"},
+        {"date": "2025-07-01", "updateReason": "应对策略自主应用复盘"}
+      ],
+      "keyWordsOfPastChatHistory": ["灾难化思维", "呼吸调节", "认知解离", "安全感建立", "情绪耐受"],
+      "guideToAction": {
+        "prompt": "结合时间线中情绪变化节点和关键词，你发现哪种心理调节方法最适合自己？如何进一步强化？",
+        "textBox": "可选，提示文字：'记录你的应对心得...'"
+      }
+    },
+    {
+      "timeline": [
+        {"date": "2025-01-20", "updateReason": "童年创伤记忆初步梳理"},
+        {"date": "2025-03-08", "updateReason": "依恋模式识别报告"},
+        {"date": "2025-05-15", "updateReason": "内在小孩对话练习记录"},
+        {"date": "2025-06-30", "updateReason": "创伤闪回频率下降复盘"}
+      ],
+      "keyWordsOfPastChatHistory": ["情感隔离", "安全感缺失", "自我关怀", "情绪宣泄", "和解尝试"],
+      "guideToAction": {
+        "prompt": "观察时间线中创伤相关记录的变化，哪些关键词对应的练习让你感受到内在力量的增长？",
+        "textBox": "可选，点击'写下感悟'展开输入框"
+      }
+    },
+    {
+      "timeline": [
+        {"date": "2025-04-10", "updateReason": "人际关系模式卡点记录"},
+        {"date": "2025-04-28", "updateReason": "边界感建立练习反馈"},
+        {"date": "2025-06-05", "updateReason": "冲突应对方式改善记录"},
+        {"date": "2025-07-12", "updateReason": "亲密关系信任重建进展"}
+      ],
+      "keyWordsOfPastChatHistory": ["讨好型人格", "拒绝困难", "情绪勒索", "自我价值感", "健康边界"],
+      "guideToAction": {
+        "prompt": "从人际关系卡点到信任重建，哪些关键词对应的改变让你觉得最有疗愈意义？如何巩固这种变化？",
+        "textBox": "可选，支持500字内输入，自动保存为私密笔记"
+      }
+    },
+    {
+      "timeline": [
+        {"date": "2025-02-05", "updateReason": "抑郁情绪状态基线记录"},
+        {"date": "2025-03-18", "updateReason": "行为激活疗法初期效果"},
+        {"date": "2025-05-01", "updateReason": "兴趣活动重新投入记录"},
+        {"date": "2025-06-20", "updateReason": "积极情绪体验时长增加"}
+      ],
+      "keyWordsOfPastChatHistory": ["动力缺失", "无意义感", "微小行动", "愉悦重建", "希望感"],
+      "guideToAction": {
+        "prompt": "对比时间线中抑郁状态的变化，哪些关键词对应的行动最能帮你打破情绪恶性循环？",
+        "textBox": "可选，输入后可标记为'疗愈里程碑'"
+      }
+    },
+    {
+      "timeline": [
+        {"date": "2025-03-01", "updateReason": "自我批判思维模式识别"},
+        {"date": "2025-04-15", "updateReason": "自我同情练习记录"},
+        {"date": "2025-06-08", "updateReason": "核心信念调整初步成效"},
+        {"date": "2025-07-10", "updateReason": "自我接纳程度提升复盘"}
+      ],
+      "keyWordsOfPastChatHistory": ["完美主义", "苛责语言", "自我宽恕", "内在声音软化", "价值认同"],
+      "guideToAction": {
+        "prompt": "从自我批判到自我接纳，时间线中的哪些节点变化让你感受到最深刻的内在转变？",
+        "textBox": "可选，提示文字：'记录自我对话的新方式...'"
+      }
+    }
+  ]

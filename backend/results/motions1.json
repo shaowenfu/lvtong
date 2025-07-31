@@ -1,0 +1,29 @@
+{
+  "reportGeneratedDate": "2023-10-27",
+  "overallCurrentMood": "平静与满足",
+  "moodHistory": [
+    { "date": "2023-10-14", "moodScore": 8.0, "moodDescription": "周末愉快，精力充沛" },
+    { "date": "2023-10-15", "moodScore": 8.5, "moodDescription": "享受家庭时光，感觉平和" },
+    { "date": "2023-10-16", "moodScore": 7.5, "moodDescription": "周一工作顺利，略有挑战但应对自如" },
+    { "date": "2023-10-17", "moodScore": 8.2, "moodDescription": "完成重要任务，成就感满满" },
+    { "date": "2023-10-18", "moodScore": 7.8, "moodDescription": "日常平稳，保持积极心态" },
+    { "date": "2023-10-19", "moodScore": 8.0, "moodDescription": "与同事交流融洽，工作效率高" },
+    { "date": "2023-10-20", "moodScore": 8.5, "moodDescription": "期待周末，心情轻松" },
+    { "date": "2023-10-21", "moodScore": 9.0, "moodDescription": "户外活动，身心放松" },
+    { "date": "2023-10-22", "moodScore": 8.8, "moodDescription": "享受阅读，沉浸在自我空间" },
+    { "date": "2023-10-23", "moodScore": 7.7, "moodDescription": "新一周开始，充满活力" },
+    { "date": "2023-10-24", "moodScore": 8.1, "moodDescription": "解决一个长期问题，感觉轻松" },
+    { "date": "2023-10-25", "moodScore": 7.9, "moodDescription": "日常有序，情绪稳定" },
+    { "date": "2023-10-26", "moodScore": 8.3, "moodDescription": "与朋友聚餐，心情愉悦" },
+    { "date": "2023-10-27", "moodScore": 8.0, "moodDescription": "对未来充满期待，保持平和" }
+  ],
+  "chartDetails": {
+    "chartTitle": "近两周情绪波动趋势：积极且稳定",
+    "moodScoreScale": "情绪评分范围1-10，分数越高代表情绪越积极、稳定。"
+  },
+  "emotionalToolbox": {
+    "moodAnalysis": "我们发现，你近期的情绪状态非常积极和稳定，这表明你拥有很强的心理韧性和良好的情绪管理能力。即使面对挑战，你也能保持乐观并迅速调整。你的情绪模式非常健康，值得称赞。",
+    "actionGuide": "情绪工具箱：请继续保持你当前健康的生活习惯，如规律作息、适度运动和积极社交。可以尝试引入一些新的爱好或小目标，为生活增添更多乐趣和新鲜感，让积极的情绪保持流动。同时，记得定期记录那些让你感到满足和快乐的瞬间，强化积极的心理循环。"
+  },
+  "disclaimer": "此分析由AI模型生成，仅供参考和自我探索，不构成专业的心理诊断或建议。如有需要，请咨询专业心理咨询师。"
+}
