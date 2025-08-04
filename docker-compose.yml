@@ -89,6 +89,25 @@ services:
       retries: 3
       start_period: 10s
 
+    # MongoDB Web管理界面
+  mongo-express:
+    image: mongo-express:1.0.0-alpha
+    container_name: mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=lvtong_admin_2024
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:lvtong_admin_2024@mongodb:27017/
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=lvtong_web_2024
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - api-network
+
 # 网络配置
 networks:
   api-network:
@@ -135,22 +154,3 @@ volumes:
 # volumes:
 #   postgres_data:
 #   redis_data:
-
-  # MongoDB Web管理界面
-  mongo-express:
-    image: mongo-express:1.0.0-alpha
-    container_name: mongo-express
-    restart: unless-stopped
-    ports:
-      - "8081:8081"
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=lvtong_admin_2024
-      - ME_CONFIG_MONGODB_URL=mongodb://admin:lvtong_admin_2024@mongodb:27017/
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=lvtong_web_2024
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - api-network
