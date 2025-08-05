@@ -7,7 +7,7 @@
 
 from typing import Generator, Dict, Any, Optional
 from .openai_service import OpenAIService
-from ..config.persona_config import NianNianPersona
+from ..config.persona_config import XinErPersona
 import random
 import re
 from datetime import datetime
@@ -16,12 +16,12 @@ class ChatService:
     """
     聊天服务类
     处理AI消息、历史记录查询等业务逻辑
-    支持念念AI人设的情感陪伴功能
+    支持为欣儿定制的AI人设的情感陪伴功能
     """
     
     def __init__(self):
         self.openai_service = OpenAIService()
-        self.persona = NianNianPersona()
+        self.persona = XinErPersona()
     
     def _analyze_emotion(self, message: str) -> str:
         """简单的情绪分析"""
