@@ -108,6 +108,29 @@ services:
     networks:
       - api-network
 
+  # Dozzle日志查看器
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"  # 只绑定到本地，通过nginx代理
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_LEVEL=info
+      - DOZZLE_TAILSIZE=300
+      - DOZZLE_FILTER="name=mongodb,flask-api,nginx-proxy,mongo-express"
+    networks:
+      - api-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
 # 网络配置
 networks:
   api-network:
