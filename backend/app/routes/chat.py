@@ -13,6 +13,22 @@ from ..services.chat_service import ChatService
 chat_bp = Blueprint("chat", __name__)
 chat_service = ChatService()
 
+def clean_message_content(message: str) -> str:
+    """
+    Clean message content by removing system prompt if present
+    If the message contains the prompt ending marker, remove everything before and including it
+    """
+    prompt_ending = "注意聊天需要简短像朋友聊天一样不要长篇大论。"
+    
+    if prompt_ending in message:
+        # Find the position after the prompt ending
+        split_pos = message.find(prompt_ending) + len(prompt_ending)
+        # Extract only the user message part (everything after the prompt)
+        cleaned_message = message[split_pos:].strip()
+        return cleaned_message
+    
+    return message
+
 @chat_bp.route("/message", methods=["POST"])
 def chat_message():
     """
@@ -32,9 +48,14 @@ def chat_message():
         if not data:
             return jsonify({"error": "Request body is required", "status": "error"}), 400
         
-        message = data.get("message", "").strip()
-        if not message:
+        raw_message = data.get("message", "").strip()
+        if not raw_message:
             return jsonify({"error": "Message is required", "status": "error"}), 400
+        
+        # Clean the message content to remove system prompt if present
+        message = clean_message_content(raw_message)
+        if not message:
+            return jsonify({"error": "Message content is empty after cleaning", "status": "error"}), 400
         
         # 后端自动查找聊天历史
         history_result = chat_service.get_history(user_id)
@@ -105,9 +126,14 @@ def chat_message_sync():
         if not data:
             return jsonify({"error": "Request body is required", "status": "error"}), 400
         
-        message = data.get("message", "").strip()
-        if not message:
+        raw_message = data.get("message", "").strip()
+        if not raw_message:
             return jsonify({"error": "Message is required", "status": "error"}), 400
+        
+        # Clean the message content to remove system prompt if present
+        message = clean_message_content(raw_message)
+        if not message:
+            return jsonify({"error": "Message content is empty after cleaning", "status": "error"}), 400
         
         # 后端自动查找聊天历史
         history_result = chat_service.get_history(user_id)
