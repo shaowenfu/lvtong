@@ -85,9 +85,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
       interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      timeout: 20s
+      retries: 5
+      start_period: 20s
 
     # MongoDB Web管理界面
   mongo-express:
@@ -120,16 +120,16 @@ services:
     environment:
       - DOZZLE_NO_ANALYTICS=true
       - DOZZLE_LEVEL=info
-      - DOZZLE_TAILSIZE=300
+      - DOZZLE_TAIL_SIZE=300
       - DOZZLE_FILTER="name=mongodb,flask-api,nginx-proxy,mongo-express"
     networks:
       - api-network
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080"]
       interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      timeout: 20s
+      retries: 5
+      start_period: 20s
 
 # 网络配置
 networks:
