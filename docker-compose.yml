@@ -137,10 +137,10 @@ services:
     container_name: mysql
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=NianNian_mysql_root_2024
+      - MYSQL_ROOT_PASSWORD=NianNian_mysql_root_2025
       - MYSQL_DATABASE=NianNian
       - MYSQL_USER=NianNian_user
-      - MYSQL_PASSWORD=NianNian_password_2024
+      - MYSQL_PASSWORD=NianNian_password_2025
     command: ["--default-authentication-plugin=mysql_native_password", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
     ports:
       - "3306:3306"  # 暴露给主机，供其他后端服务器访问
