@@ -1,29 +1,6 @@
 version: '3.8'
 
 services:
-  # MongoDB数据库服务
-  mongodb:
-    image: mongo:7.0
-    container_name: mongodb
-    restart: unless-stopped
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=lvtong_admin_2024
-      - MONGO_INITDB_DATABASE=lvtong
-    ports:
-      - "127.0.0.1:27017:27017"  # 只绑定到本地
-    volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    networks:
-      - api-network
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
   # Flask后端API服务
   backend:
     build:
@@ -41,7 +18,7 @@ services:
       - FLASK_HOST=0.0.0.0
       - FLASK_PORT=5000
       - FLASK_DEBUG=false
-      - MONGODB_URI=mongodb://admin:lvtong_admin_2024@mongodb:27017/lvtong?authSource=admin
+      - MONGODB_URI=${MONGODB_URI}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_API_BASE=${OPENAI_API_BASE}
       - OPENAI_API_VERSION=${OPENAI_API_VERSION}
@@ -54,9 +31,9 @@ services:
       - backend_logs:/app/logs
     networks:
       - api-network
-    depends_on:
-      mongodb:
-        condition: service_healthy
+    # depends_on:
+    #   mongodb:
+    #     condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
@@ -88,25 +65,6 @@ services:
       timeout: 20s
       retries: 5
       start_period: 20s
-
-    # MongoDB Web管理界面
-  mongo-express:
-    image: mongo-express:1.0.0-alpha
-    container_name: mongo-express
-    restart: unless-stopped
-    ports:
-      - "8081:8081"
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=lvtong_admin_2024
-      - ME_CONFIG_MONGODB_URL=mongodb://admin:lvtong_admin_2024@mongodb:27017/
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=lvtong_web_2024
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - api-network
 
   # Dozzle日志查看器
   dozzle:
@@ -163,10 +121,6 @@ networks:
 
 # 数据卷配置
 volumes:
-  mongodb_data:
-    name: mongodb_data
-  mongodb_config:
-    name: mongodb_config
   backend_logs:
     name: backend_logs
   nginx_logs:

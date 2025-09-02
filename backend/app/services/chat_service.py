@@ -8,6 +8,8 @@
 from typing import Generator, Dict, Any, Optional
 from .openai_service import OpenAIService
 from ..config.persona_config import XinErPersona
+from ..models.chat import ChatMessage, ChatSession
+from ..models.user import User
 import random
 import re
 from datetime import datetime
@@ -211,22 +213,12 @@ class ChatService:
             Dict containing chat history and metadata
         """
         try:
-            from ..extensions import mongo
-            from ..models.chat import ChatMessage
-            
-            # Query messages from MongoDB, sorted by timestamp (newest first)
-            messages_cursor = mongo.db.chat_messages.find(
-                {"user_id": user_id}
-            ).sort("timestamp", -1).limit(limit)
-            
-            # Convert to list and reverse to get chronological order
-            messages_data = list(messages_cursor)
-            messages_data.reverse()  # Oldest first for conversation context
+            # Get recent messages using the new model
+            messages = ChatMessage.get_recent_messages(user_id, limit)
             
             # Convert to OpenAI format for API consumption
             conversation_history = []
-            for msg_data in messages_data:
-                chat_msg = ChatMessage.from_dict(msg_data)
+            for chat_msg in messages:
                 conversation_history.append(chat_msg.to_openai_format())
             
             return {
@@ -263,10 +255,7 @@ class ChatService:
             bool: True if saved successfully, False otherwise
         """
         try:
-            from ..extensions import mongo
-            from ..models.chat import ChatMessage
-            
-            # Create chat message object
+            # Create and save chat message
             chat_msg = ChatMessage(
                 user_id=user_id,
                 content=content,
@@ -275,21 +264,17 @@ class ChatService:
                 tokens_used=tokens_used
             )
             
-            # Save to MongoDB
-            result = mongo.db.chat_messages.insert_one(chat_msg.to_dict())
+            # Save message using the new model
+            message_id = chat_msg.save()
             
             # Update user's last active time and emotional state (for user messages)
-            update_data = {"last_active": datetime.now()}
             if role == "user" and emotional_state != "neutral":
-                update_data["emotional_state"] = emotional_state
+                user = User.find_by_id(user_id)
+                if user:
+                    user.update_emotional_state(emotional_state)
+                    user.add_interaction("chat_message", {"emotional_state": emotional_state})
             
-            mongo.db.users.update_one(
-                {"user_id": user_id},
-                {"$set": update_data},
-                upsert=True
-            )
-            
-            return result.inserted_id is not None
+            return message_id is not None
             
         except Exception as e:
             print(f"Error saving message for user {user_id}: {str(e)}")
@@ -306,16 +291,14 @@ class ChatService:
             Dict containing user profile data
         """
         try:
-            from ..extensions import mongo
+            # Get user using the new model
+            user = User.find_by_id(user_id)
             
-            # Query user from MongoDB
-            user_data = mongo.db.users.find_one({"user_id": user_id})
-            
-            if user_data:
+            if user:
                 return {
-                    "persona_profile": user_data.get("persona_profile", {}),
-                    "persona_preferences": user_data.get("persona_preferences", {}),
-                    "emotional_state": user_data.get("emotional_state", "neutral"),
+                    "persona_profile": user.persona_profile,
+                    "persona_preferences": user.persona_preferences,
+                    "emotional_state": user.emotional_state,
                     "status": "success"
                 }
             else:
@@ -349,13 +332,16 @@ class ChatService:
             Dict with operation result
         """
         try:
-            from ..extensions import mongo
+            # Get all messages for the user and delete them
+            messages = ChatMessage.find_by_user(user_id)
+            deleted_count = 0
             
-            # Delete all messages for the user
-            result = mongo.db.chat_messages.delete_many({"user_id": user_id})
+            for message in messages:
+                if message.delete():
+                    deleted_count += 1
             
             return {
-                "deleted_count": result.deleted_count,
+                "deleted_count": deleted_count,
                 "user_id": user_id,
                 "status": "success"
             }

@@ -7,6 +7,7 @@ Flask-CORS==4.0.0
 
 # MongoDB数据库支持
 Flask-PyMongo==2.3.0
+pymongo[srv]==4.6.0
 
 # HTTP请求库（用于调用OpenAI API等）
 requests==2.31.0

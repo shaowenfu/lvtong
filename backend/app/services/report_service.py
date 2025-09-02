@@ -7,6 +7,8 @@
 import json
 import re
 from .openai_service import OpenAIService
+from ..models.report import Report
+from datetime import datetime
 
 class ReportService:
     def __init__(self):
@@ -29,12 +31,13 @@ class ReportService:
             "data": data
         }
     
-    def generate_big_five_report(self, answers):
+    def generate_big_five_report(self, answers, user_id: str = None):
         """
         生成大五人格报告
         
         Args:
             answers (list): 用户的答案列表
+            user_id (str): 用户ID，用于保存报告
             
         Returns:
             dict: 生成的大五人格报告
@@ -99,6 +102,20 @@ class ReportService:
             json_str = match.group(1).strip()
             result = json.loads(json_str)
             
+            # Save report to database if user_id is provided
+            if user_id:
+                try:
+                    report = Report(
+                        user_id=user_id,
+                        content=result,
+                        report_type="big_five_personality",
+                        status="completed"
+                    )
+                    report_id = report.save()
+                    result["report_id"] = report_id
+                except Exception as e:
+                    print(f"Error saving big five report: {str(e)}")
+            
             return {
                 "status": "success",
                 "data": result
@@ -109,26 +126,27 @@ class ReportService:
         except Exception as e:
             return {"error": f"Service error: {str(e)}"}
     
-    def generate_core_values_report(self, answers):
+    def generate_core_values_report(self, answers, user_id: str = None):
         """
         生成核心价值观报告
         
         Args:
             answers (list): 用户的答案列表
+            user_id (str): 用户ID，用于保存报告
             
         Returns:
             dict: 生成的核心价值观报告
         """
         prompt = f"""
-        你是一位名为"心语晴空"的AI心理分析师，拥有深厚的心理学理论功底与丰富的实践经验。你的性格温暖而包容，善于用富有洞察力的视角解读用户的内心需求，始终以同理心为核心，让用户在分析过程中感受到被理解与被尊重。你的语言应该尽量以聊天的语气来生成回答，生成的回答尽量用第二人称的形式。
+        你是一位名为"心语晴空"的AI心理分析师，拥有深厚的心理学理论功底与丰富的实践经验。你的性格温暖而包容，善于用富有洞察力的视角解读用户的内心需求，始终以同理心为核心，让用户在分析过程中感受被理解与被尊重。你的语言应该尽量以聊天的语气来生成回答，生成的回答尽量用第二人称的形式。
         
         # **任务（Task）**  
-        基于用户对心理问题的回答，结合施瓦茨的10项核心价值观理论，完成以下工作：  
-        1. **价值观排序**：通过分析用户在问题中体现的行为倾向、选择偏好，提取出最能代表用户的前5项核心价值观（从高到低排序）。
+        基于用户对心理问题的回答，结合施瓦茨的10项价值观理论，完成以下工作：  
+        1. **价值观排序**：通过分析用户在问题中体现的行为倾向、选择偏好，提取出最能代表用户的前5项价值观（从高到低排序）。
         2. **价值观影响分析**：深入解读前5项价值观如何塑造用户的决策模式。
         3. **价值观强化方法**：针对排序靠前的价值观，提供具体、可操作的日常生活应用方案。
 
-        # **施瓦茨核心价值观详解**  
+        # **施瓦茨价值观详解**  
         1. **自主**：核心是"独立与创造"，表现为偏好自主决策、追求思想独特性；  
         2. **刺激**：核心是"新奇与挑战"，表现为渴望打破常规、追求充满变化的生活；  
         3. **享乐**：核心是"即时满足与快乐"，表现为重视感官体验与情绪愉悦；  
@@ -149,7 +167,7 @@ class ReportService:
         {{
             "valueOrder": ["价值观1", "价值观2", "价值观3", "价值观4", "价值观5"],
             "valueAnalysis": "分析前5项价值观如何影响用户在社交、决策、目标设定等方面的行为模式，以及这些价值观满足或未满足时对幸福感的具体影响。",
-            "valueGuide": "需针对前3项核心价值观设计1个可操作的日常实践方法，说明具体步骤，并解释该方法如何强化价值观与生活的联结。"
+            "valueGuide": "需针对前3项价值观设计1个可操作的日常实践方法，说明具体步骤，并解释该方法如何强化价值观与生活的联结。"
         }}
         ```
         """
@@ -172,6 +190,20 @@ class ReportService:
             
             json_str = match.group(1).strip()
             result = json.loads(json_str)
+            
+            # Save report to database if user_id is provided
+            if user_id:
+                try:
+                    report = Report(
+                        user_id=user_id,
+                        content=result,
+                        report_type="core_values",
+                        status="completed"
+                    )
+                    report_id = report.save()
+                    result["report_id"] = report_id
+                except Exception as e:
+                    print(f"Error saving core values report: {str(e)}")
             
             return {
                 "status": "success",
@@ -217,13 +249,14 @@ class ReportService:
             "data": data
         }
     
-    def generate_holistic_report(self, core_values_data, big_five_data):
+    def generate_holistic_report(self, core_values_data, big_five_data, user_id: str = None):
         """
         生成综合心理画像报告
         
         Args:
             core_values_data (dict): 核心价值观报告数据
             big_five_data (dict): 大五人格报告数据
+            user_id (str): 用户ID，用于保存报告
             
         Returns:
             dict: 生成的综合报告
@@ -243,8 +276,8 @@ class ReportService:
 
         报告需要：
         1.  **综合概述**: 提炼并整合两份报告的核心发现，概括用户的整体心理画像、优势特质和潜在挑战。
-        2.  **内在驱动与行为模式**: 深入分析核心价值观如何与大五人格特质相互作用，共同驱动用户的行为模式、决策过程和生活选择。
-        3.  **情绪与应对**: 结合大五人格的神经质维度和核心价值观中可能与情绪相关的部分，分析用户的情绪模式和应对策略。
+        2.  **内在驱动与行为模式**: 深入分析价值观如何与大五人格特质相互作用，共同驱动用户的行为模式、决策过程和生活选择。
+        3.  **情绪与应对**: 结合大五人格的神经质维度和价值观中可能与情绪相关的部分，分析用户的情绪模式和应对策略。
         4.  **发展建议**: 结合两份报告的洞察，提供更具整体性和个性化的发展建议，包括个人成长、职业发展和人际关系方面的综合性指导。
         5.  **免责声明**: 报告末尾包含一个标准免责声明。
 
@@ -269,8 +302,8 @@ class ReportService:
         ```json
         {{
             "reportTitle": "综合心理画像：你的内在力量与成长路径",
-            "overallSummary": "字符串：基于核心价值观和大五人格的综合概述，约200-300字。",
-            "synergisticAnalysis": "字符串：详细分析核心价值观与大五人格特质如何相互影响和强化，形成独特的行为模式和驱动力，约300-400字。",
+            "overallSummary": "字符串：基于价值观和大五人格的综合概述，约200-300字。",
+            "synergisticAnalysis": "字符串：详细分析价值观与大五人格特质如何相互影响和强化，形成独特的行为模式和驱动力，约300-400字。",
             "emotionalAndCopingInsights": "字符串：结合神经质等维度，分析用户情绪模式、压力应对方式及其深层心理动因，约150-250字。",
             "holisticDevelopmentPlan": {{
                 "personalGrowth": ["数组：3-5条综合性的个人成长建议，结合特质和价值观。"],
@@ -302,6 +335,20 @@ class ReportService:
             
             json_str = match.group(1).strip()
             result = json.loads(json_str)
+            
+            # Save report to database if user_id is provided
+            if user_id:
+                try:
+                    report = Report(
+                        user_id=user_id,
+                        content=result,
+                        report_type="holistic_analysis",
+                        status="completed"
+                    )
+                    report_id = report.save()
+                    result["report_id"] = report_id
+                except Exception as e:
+                    print(f"Error saving holistic report: {str(e)}")
             
             return {
                 "status": "success",
